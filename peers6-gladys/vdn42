@@ -1,0 +1,19 @@
+table t_vdn42;
+
+protocol bgp vdn42 from dnpeers {
+  table t_vdn42;
+  local fdae:e2d8:34a1:1::1 as OWNAS;
+  neighbor fdae:e2d8:34a1:1::2 as OWNAS;
+
+  # 8 ms, 1000 mbit/s, encrypted tunnel (updated: 2017-02-19)
+  import where dn42_import_filter(3,25,34);
+  export where dn42_export_filter(3,25,34);
+};
+
+protocol pipe p_master_to_vdn42 {
+  table master;
+  peer table t_vdn42;
+  import none; #where source = RTS_BGP;
+  export where source = RTS_BGP;
+};
+
