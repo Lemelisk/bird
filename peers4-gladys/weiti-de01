@@ -1,0 +1,25 @@
+table t_weiti_de01;
+
+protocol bgp weiti_de01 from dnpeers {
+  table t_weiti_de01;
+  local 172.23.119.97 as OWNAS;
+  neighbor 172.20.175.193 as 4242423905;
+
+  # .5 ms, 1000 mbit/s, encrypted pfs tunnel (updated: 2017-02-08)
+  import where dn42_import_filter(1,25,34);
+  export where dn42_export_filter(1,25,34);
+};
+
+protocol pipe p_master_to_weiti_de01 {
+  table master;
+  peer table t_weiti_de01;
+  import where source = RTS_BGP;
+  export where source = RTS_STATIC;
+};
+
+protocol pipe p_dn42_to_weiti_de01 {
+  table t_weiti_de01;
+  peer table t_dn42;
+  import where source = RTS_STATIC;
+  export none;
+};

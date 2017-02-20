@@ -1,0 +1,106 @@
+#!/bin/bash
+
+#
+# bird-mkroa
+# author: hexa-
+#
+# get updates from net.dn42.registry/utils/roa/
+#
+
+<<EOF
+
+Load the ROA-Table from BIRD4_ROA_CFG like this:
+
+	roa table dn42_roa {
+		include "roa4.conf";
+	};
+
+Check in your filters like this:
+
+	if (roa_check(dn42_roa, net, bgp_path.last) = ROA_INVALID) then {
+		print "[dn42] ROA check failed for ", net, " ASN ", bgp_path.last;
+		reject;
+	}
+
+EOF
+
+#
+# Configuration
+#
+
+REGISTRY="/etc/bird/registry"
+
+# mtn repositories to pull from, leave empty if you keep mtn up to date
+# outside of this script. separate multiple hosts with spaces.
+MTN_UPDATE_FROM=""
+
+BIRD4C=birdc
+BIRD4_ROA_CFG="/etc/bird/roa4.conf"
+BIRD4_MAX_PREFIXLEN=28
+
+BIRD6C=birdc6
+BIRD6_ROA_CFG="/etc/bird/roa6.conf"
+BIRD6_MAX_PREFIXLEN=64
+
+#
+# End of configuration
+#
+
+# check if monotone repository exists
+if [ ! -d "$REGISTRY/_MTN" ]; then
+	>&2 echo "registry directory does not exist; check https://wiki.dn42/services/Whois#monotone_client-setup on how to set it up."
+	exit 1
+fi
+
+# update monotone repository
+if [ -n "$MTN_UPDATE_FROM" ]; then
+	cd $REGISTRY
+
+	for HOST in $MTN_UPDATE_FROM; do
+		mtn pull $HOST
+	done
+
+	mtn update
+fi
+
+function mkroa() {
+	# based on utils/roa/genroa.sh by fritz@grimpen.net
+
+	for i in $*
+	do
+		route=$(grep -E "route[6]?:" $i | tr -d '[:blank:]' | cut -d':' -f2-)
+		origin=$(grep "origin:" $i | tr -d '[:blank:][:alpha:]' | cut -d':' -f2)
+		if [ -z "$origin" -o -z "$route" -o -n "$(echo $as | tr -d '[:digit:]')" ]
+		then
+			>&2 echo "$i is invalid"
+			continue
+		fi
+		prefixlen=$(echo $route | cut -d'/' -f2)
+		if [ $MAX_PREFIXLEN -gt $prefixlen ]; then
+			prefixlen=$MAX_PREFIXLEN
+		fi
+
+		while read -r asn
+		do
+			echo "roa $route max $prefixlen as $asn;"
+		done <<< "$origin"
+	done
+}
+
+MAX_PREFIXLEN=$BIRD4_MAX_PREFIXLEN mkroa $REGISTRY/data/route/* > $BIRD4_ROA_CFG
+MAX_PREFIXLEN=$BIRD6_MAX_PREFIXLEN mkroa $REGISTRY/data/route6/* > $BIRD6_ROA_CFG
+
+BIRD4_CHECK=$($BIRD4C configure check | grep error)
+if [[ -z $BIRD4_CHECK ]]; then
+	$BIRD4C configure >/dev/null
+else
+	>&2 echo $BIRD4_CHECK
+fi
+
+BIRD6_CHECK=$($BIRD6C configure check | grep error)
+if [[ -z $BIRD6_CHECK ]]; then
+	$BIRD6C configure >/dev/null
+else
+	>&2 echo $BIRD6_CHECK
+fi
+

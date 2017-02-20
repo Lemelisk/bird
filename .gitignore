@@ -1,0 +1,7 @@
+ospf-password.conf
+local4.conf
+local6.conf
+peers4
+peers6
+registry
+wireguard/wireguard.sh
