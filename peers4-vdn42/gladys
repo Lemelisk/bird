@@ -17,9 +17,15 @@ protocol pipe p_master_to_gladys {
   export where source = RTS_BGP;
 };
 
-#protocol pipe p_dn42_to_weiti_de01 {
-#  table t_weiti_de01;
-#  peer table t_dn42;
-#  import where source = RTS_STATIC;
-#  export none;
-#};
+table t_ospf_gladys;
+
+protocol ospf ospf_gladys {
+  table t_ospf_routes;
+  area 0 {
+    interface "wg-priv-gladys" {
+    };
+    interface "dummy0" {
+      stub;
+    };
+  };
+}
