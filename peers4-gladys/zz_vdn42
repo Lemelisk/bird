@@ -41,5 +41,11 @@ protocol ospf ospf_vdn42 {
     interface "dummy0" {
       stub;
     };
+    interface "wg-dn42-weiti" {
+      stub;
+    };
+    interface "ovpn-dn42-asixfr" {
+      stub;
+    };
   };
 }
