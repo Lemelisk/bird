@@ -1,9 +1,11 @@
-table t_vdn42
+table t_vdn42;
 
 protocol bgp vdn42 from dnpeers {
   table t_vdn42;
   local 172.23.119.97 as OWNAS;
   neighbor 172.23.119.98 as OWNAS;
+
+  igp table t_ospf_routes;
 
   # 8.6 ms, 1000 mbit/s, encrypted pfs tunnel (updated: 2017-02-19)
   import where dn42_import_filter(3,25,34);
@@ -37,6 +39,7 @@ protocol ospf ospf_vdn42 {
   table t_ospf_routes;
   area 0 {
     interface "wg-priv-vdn42" {
+      neighbors { 172.23.119.111/31; };
     };
     interface "dummy0" {
       stub;
