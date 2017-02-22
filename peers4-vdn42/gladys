@@ -4,6 +4,7 @@ protocol bgp gladys from dnpeers {
   table t_gladys;
   local 172.23.119.98 as OWNAS;
   neighbor 172.23.119.97 as OWNAS;
+  igp table t_ospf_routes;
 
   # 8.5 ms, 1000 mbit/s, encrypted pfs tunnel (updated: 2017-02-19)
   import where dn42_import_filter(3,25,34);
@@ -23,6 +24,9 @@ protocol ospf ospf_gladys {
   table t_ospf_routes;
   area 0 {
     interface "wg-priv-gladys" {
+      neighbors { 
+        172.23.119.110/31 eligible; 
+      };
     };
     interface "dummy0" {
       stub;
