@@ -13,8 +13,8 @@ protocol bgp gladys from dnpeers {
 protocol pipe p_master_to_gladys {
   table master;
   peer table t_gladys;
-  import none; #where source = RTS_BGP;
-  export where source = RTS_BGP;
+  import where source = RTS_BGP;
+  export none; #where source = RTS_STATIC;
 };
 
 table t_ospf_gladys;
