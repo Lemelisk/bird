@@ -27,5 +27,8 @@ protocol ospf ospf_gladys {
     interface "dummy0" {
       stub;
     };
+    interface "eth0.15" {
+      stub;
+    };
   };
 }
