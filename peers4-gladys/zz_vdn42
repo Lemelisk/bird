@@ -39,7 +39,7 @@ protocol ospf ospf_vdn42 {
   table t_ospf_routes;
   area 0 {
     interface "wg-priv-vdn42" {
-      neighbors { 172.23.119.111/31; };
+      neighbors { 172.23.119.111; };
     };
     interface "dummy0" {
       stub;
