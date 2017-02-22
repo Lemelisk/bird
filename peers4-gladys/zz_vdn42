@@ -2,8 +2,6 @@ table t_vdn42
 
 protocol bgp vdn42 from dnpeers {
   table t_vdn42;
-  #local 172.23.119.110 as OWNAS;
-  #neighbor 172.23.119.111 as OWNAS;
   local 172.23.119.97 as OWNAS;
   neighbor 172.23.119.98 as OWNAS;
 
@@ -36,7 +34,7 @@ protocol pipe p_weiti_to_igp {
 table t_ospf_vdn42;
 
 protocol ospf ospf_vdn42 {
-  table t_ospf_vdn42;
+  table t_ospf_routes;
   area 0 {
     interface "wg-priv-vdn42" {
     };
@@ -45,9 +43,3 @@ protocol ospf ospf_vdn42 {
     };
   };
 }
-protocol pipe p_ospf_to_vdn42 {
-  table t_ospf_routes;
-  peer table t_ospf_vdn42;
-  import all; #where source = RTS_BGP;
-  export none;
-};
