@@ -4,6 +4,7 @@ protocol bgp gladys from dnpeers {
   table t_gladys;
   local 172.23.119.98 as OWNAS;
   neighbor 172.23.119.97 as OWNAS;
+  
   igp table t_ospf_routes;
 
   # 8.5 ms, 1000 mbit/s, encrypted pfs tunnel (updated: 2017-02-19)
@@ -15,7 +16,14 @@ protocol pipe p_master_to_gladys {
   table master;
   peer table t_gladys;
   import where source = RTS_BGP;
-  export none; #where source = RTS_STATIC;
+  export where source = RTS_BGP;
+};
+
+protocol pipe p_asix_to_igp {
+  table t_asix_fr;
+  peer table t_gladys;
+  import none;
+  export where source = RTS_BGP;
 };
 
 table t_ospf_gladys;
@@ -32,6 +40,9 @@ protocol ospf ospf_gladys {
       stub;
     };
     interface "eth0.15" {
+      stub;
+    };
+    interface "*-dn42-*" {
       stub;
     };
   };
