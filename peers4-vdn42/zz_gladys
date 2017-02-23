@@ -27,7 +27,7 @@ protocol ospf ospf_gladys {
   area 0 {
     interface "wg-priv-gladys" {
       neighbors { 
-        172.23.119.111; 
+        172.23.119.110;
       };
     };
     interface "dummy0" {
