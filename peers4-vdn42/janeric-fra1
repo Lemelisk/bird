@@ -1,0 +1,25 @@
+table t_janeric_fra01;
+
+protocol bgp janeric_fra01 from dnpeers {
+  table t_janeric_fra01;
+  local 172.23.119.98 as OWNAS;
+  neighbor 172.22.159.226 as 4242420812;
+
+  # 3.5 ms, 1000 mbit/s, encrypted tunnel (updated: 2017-02-21)
+  import where dn42_import_filter(2,25,33);
+  export where dn42_export_filter(2,25,33);
+};
+
+protocol pipe p_master_to_janeric_fra01 {
+  table master;
+  peer table t_janeric_fra01;
+  import where source = RTS_BGP;
+  export where source = RTS_STATIC;
+};
+
+protocol pipe p_dn42_to_janeric_fra01 {
+  table t_janeric_fra01;
+  peer table t_dn42;
+  import where source = RTS_STATIC;
+  export none;
+};
