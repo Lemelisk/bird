@@ -19,12 +19,6 @@ protocol pipe p_master_to_gladys {
   export where source = RTS_BGP;
 };
 
-protocol pipe p_asix_to_igp {
-  table t_asix_fr;
-  peer table t_gladys;
-  import none;
-  export where source = RTS_BGP;
-};
 
 table t_ospf_gladys;
 
