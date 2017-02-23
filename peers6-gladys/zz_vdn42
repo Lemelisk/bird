@@ -20,20 +20,6 @@ protocol pipe p_master_to_vdn42 {
 };
 
 
-protocol pipe p_asix_to_igp {
-  table t_asix_fr;
-  peer table t_vdn42;
-  import none;
-  export where source = RTS_BGP;
-};
-protocol pipe p_weiti_to_igp {
-  table t_weiti_de01;
-  peer table t_vdn42;
-  import none;
-  export where source = RTS_BGP;
-};
-
-
 table t_ospf_vdn42;
 
 protocol ospf ospf_vdn42 {
