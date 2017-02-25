@@ -14,7 +14,8 @@ protocol pipe p_master_to_weiti_de01 {
   table master;
   peer table t_weiti_de01;
   import where source = RTS_BGP;
-  export where source = RTS_STATIC;
+  #export where source = RTS_STATIC;
+  export where filter_export();
 };
 
 protocol pipe p_dn42_to_weiti_de01 {

@@ -14,7 +14,8 @@ protocol pipe p_master_to_asix_fr {
   table master;
   peer table t_asix_fr;
   import where source = RTS_BGP;
-  export where source = RTS_STATIC;
+  #export where source = RTS_STATIC;
+  export where filter_export();
 };
 
 protocol pipe p_dn42_to_asix_fr {
