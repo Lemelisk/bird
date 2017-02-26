@@ -2,8 +2,8 @@ table t_gladys;
 
 protocol bgp gladys from dnpeers {
   table t_gladys;
-  local fdae:e2d8:34a1:1::2 as OWNAS;
-  neighbor fdae:e2d8:34a1:1::1 as OWNAS;
+  local fdae:e2d8:34a1:1701::1:1 as OWNAS;
+  neighbor fdae:e2d8:34a1:1701::1:0 as OWNAS;
 
   igp table t_ospf_routes;
 
@@ -26,7 +26,6 @@ protocol ospf ospf_gladys {
   table t_ospf_routes;
   area 0 {
     interface "wg-priv-gladys" {
-      neighbors { fe80::23; };
     };
     interface "eth0.15" {
       stub;
