@@ -1,0 +1,26 @@
+table t_cccda;
+
+protocol bgp cccda from dnpeers {
+  table t_cccda;
+  local fd5a:ad49:84cc::253:4:2 as OWNAS;
+  neighbor fd5a:ad49:84cc::253:4:1 as 4242420101;
+
+  # 3.5 ms, 1000 mbit/s, encrypted tunnel (updated: 2017-02-28)
+  import where dn42_import_filter(2,24,34);
+  export where dn42_export_filter(2,24,34);
+};
+
+protocol pipe p_master_to_cccda {
+  table master;
+  peer table t_cccda;
+  import where source = RTS_BGP;
+  export where source = RTS_STATIC;
+};
+
+protocol pipe p_dn42_to_cccda {
+  table t_cccda;
+  peer table t_dn42;
+  import where source = RTS_STATIC;
+  export none;
+};
+
