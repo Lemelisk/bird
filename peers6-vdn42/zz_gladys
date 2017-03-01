@@ -7,9 +7,9 @@ protocol bgp gladys from dnpeers {
 
   igp table t_ospf_routes;
 
-  # 8 ms, 1000 mbit/s, encrypted tunnel (updated: 2017-02-04)
-  import where dn42_import_filter(3,25,34);
-  export where dn42_export_filter(3,25,34);
+  # 8 ms, 1000 mbit/s, encrypted tunnel (updated: 2017-02-28)
+  import where dn42_import_filter(3,24,34);
+  export where dn42_export_filter(3,24,34);
 };
 
 protocol pipe p_master_to_gladys {
