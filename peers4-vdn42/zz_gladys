@@ -30,7 +30,7 @@ protocol ospf ospf_gladys {
         172.23.119.110;
       };
     };
-    interface "dummy0" {
+    interface "dummy1" {
       stub;
     };
     interface "eth0.15" {

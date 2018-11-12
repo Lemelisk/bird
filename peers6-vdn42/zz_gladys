@@ -30,7 +30,7 @@ protocol ospf ospf_gladys {
     interface "eth0.15" {
       stub;
     };
-    interface "dummy0" {
+    interface "dummy1" {
       stub;
     };
     interface "*-dn42-*" {
